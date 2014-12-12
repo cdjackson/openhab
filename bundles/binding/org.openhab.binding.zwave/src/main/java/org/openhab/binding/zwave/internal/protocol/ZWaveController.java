@@ -695,13 +695,13 @@ public class ZWaveController {
 						.getLabel());
 				ZWaveCommandClassDynamicState zdds = (ZWaveCommandClassDynamicState) zwaveCommandClass;
 				int instances = zwaveCommandClass.getInstances();
-				if (instances == 0) {
+				if (instances == 1) {
 					Collection<SerialMessage> dynamicQueries = zdds.getDynamicValues(true);
 					for (SerialMessage serialMessage : dynamicQueries) {
 						sendData(serialMessage);
 					}
 				} else {
-					for (int i = 1; i <= instances; i++) {
+					for (int i = 2; i <= instances; i++) {
 						Collection<SerialMessage> dynamicQueries = zdds.getDynamicValues(true);
 						for (SerialMessage serialMessage : dynamicQueries) {
 							sendData(node.encapsulate(serialMessage, zwaveCommandClass, i));
