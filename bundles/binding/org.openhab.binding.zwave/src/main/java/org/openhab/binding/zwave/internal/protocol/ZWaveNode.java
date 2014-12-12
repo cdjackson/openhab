@@ -557,7 +557,7 @@ public class ZWaveNode {
 			return null;
 		
 		// no encapsulation necessary.
-		if (endpointId == 0) {
+		if (endpointId == 1) {
 			return serialMessage;
 		}
 		
