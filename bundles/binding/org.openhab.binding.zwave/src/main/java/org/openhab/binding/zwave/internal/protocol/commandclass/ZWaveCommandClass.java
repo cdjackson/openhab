@@ -21,6 +21,7 @@ import org.openhab.binding.zwave.internal.protocol.SerialMessage;
 import org.openhab.binding.zwave.internal.protocol.ZWaveController;
 import org.openhab.binding.zwave.internal.protocol.ZWaveEndpoint;
 import org.openhab.binding.zwave.internal.protocol.ZWaveNode;
+import org.openhab.binding.zwave.internal.protocol.commandclass.proprietary.FibaroFGRM222CommandClass;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -207,6 +208,9 @@ public abstract class ZWaveCommandClass {
 	public static ZWaveCommandClass getInstance(int classId, ZWaveNode node, ZWaveController controller, ZWaveEndpoint endpoint) {
 		try {
 			CommandClass commandClass = CommandClass.getCommandClass(classId);
+			if (commandClass != null && commandClass.equals(CommandClass.MANUFACTURER_PROPRIETARY)){
+				commandClass = CommandClass.getCommandClass(classId + node.getManufacturer() + node.getDeviceType());
+			}
 			if (commandClass == null) {
 				logger.warn(String.format("NODE %d: Unknown command class 0x%02x", node.getNodeId(), classId));
 				return null;
@@ -438,7 +442,10 @@ public abstract class ZWaveCommandClass {
 		SILENCE_ALARM(0x9D,"SILENCE_ALARM",null),
 		SENSOR_CONFIGURATION(0x9E,"SENSOR_CONFIGURATION",null),
 		MARK(0xEF,"MARK",null),
-		NON_INTEROPERABLE(0xF0,"NON_INTEROPERABLE",null);
+		NON_INTEROPERABLE(0xF0,"NON_INTEROPERABLE",null),
+		// USE MANUFACTURER SPECIFIC (0x91 [MANUFACTURER_PROPRIETARY] + MANUFACTURER_ID + DEVICE_TYPE_ID)
+		// 0x91 + 0x010F + 0x0301 for FGRM_222
+		FIABRO_FGRM_222(0x4A1,"FIABRO_FGRM_222",FibaroFGRM222CommandClass.class);
 
 		/**
 		 * A mapping between the integer code and its corresponding
