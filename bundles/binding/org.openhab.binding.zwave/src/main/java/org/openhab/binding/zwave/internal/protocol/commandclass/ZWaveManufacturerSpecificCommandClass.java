@@ -83,6 +83,7 @@ public class ZWaveManufacturerSpecificCommandClass extends ZWaveCommandClass {
 				logger.debug(String.format("NODE %d: Manufacturer ID = 0x%04x", this.getNode().getNodeId(), this.getNode().getManufacturer()));
 				logger.debug(String.format("NODE %d: Device Type = 0x%04x", this.getNode().getNodeId(), this.getNode().getDeviceType()));
 				logger.debug(String.format("NODE %d: Device ID = 0x%04x", this.getNode().getNodeId(), this.getNode().getDeviceId()));
+
 				break;
 			default:
 				logger.warn(String.format("NODE %d: Unsupported Command 0x%02X for command class %s (0x%02X).",
