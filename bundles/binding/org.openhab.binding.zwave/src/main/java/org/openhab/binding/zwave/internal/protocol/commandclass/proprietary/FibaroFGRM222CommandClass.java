@@ -42,13 +42,14 @@ public class FibaroFGRM222CommandClass extends ZWaveCommandClass {
 
 	@Override
 	public void handleApplicationCommandRequest(final SerialMessage serialMessage, final int offset, final int endpoint) {
-		logger.debug("handleApplicationCommandRequest" + serialMessage.toString());
+		logger.debug("NODE {}: handleApplicationCommandRequest: {}", this.getNode().getNodeId(),
+				serialMessage.toString());
 
 		int blindValue = serialMessage.getMessagePayloadByte(offset + blindOffset);
 		int lamellaTiltValue = serialMessage.getMessagePayloadByte(offset + lamellaTiltOffset);
 
-		logger.debug("Blind Value: " + blindValue);
-		logger.debug("Lamella Tilt Value: " + lamellaTiltValue);
+		logger.debug("NODE {}: Blind Value: {}", this.getNode().getNodeId(), blindValue);
+		logger.debug("NODE {}: Lamella Tilt Value: {}", this.getNode().getNodeId(), lamellaTiltValue);
 
 		FibaroFGRM222ValueEvent shutterEvent = new FibaroFGRM222ValueEvent(this.getNode().getNodeId(), endpoint,
 				FibaroFGRM222ValueType.Shutter, blindValue);
@@ -59,8 +60,7 @@ public class FibaroFGRM222CommandClass extends ZWaveCommandClass {
 	}
 
 	public SerialMessage setValueMessage(final int level, final String type) {
-		logger.debug(
-				"Creating new message for application command FIBARO FGRM 222 set for node {}. type: {}. level {}.",
+		logger.debug("NODE {}: Creating new message for application command FIBARO FGRM 222 set. type: {}. level {}.",
 				this.getNode().getNodeId(), type, level);
 		SerialMessage result = new SerialMessage(this.getNode().getNodeId(), SerialMessage.SerialMessageClass.SendData,
 				SerialMessage.SerialMessageType.Request, SerialMessage.SerialMessageClass.SendData,
@@ -128,8 +128,8 @@ public class FibaroFGRM222CommandClass extends ZWaveCommandClass {
 		// }
 		// result.setMessagePayload(newPayload);
 		// return result;
-		logger.debug("Creating new message for application command SWITCH_MULTILEVEL_STOP_LEVEL_CHANGE for node {}",
-				this.getNode().getNodeId());
+		logger.debug("NODE {}: Creating new message for application command SWITCH_MULTILEVEL_STOP_LEVEL_CHANGE", this
+				.getNode().getNodeId());
 		SerialMessage result = new SerialMessage(this.getNode().getNodeId(), SerialMessage.SerialMessageClass.SendData,
 				SerialMessage.SerialMessageType.Request, SerialMessage.SerialMessageClass.SendData,
 				SerialMessage.SerialMessagePriority.Set);

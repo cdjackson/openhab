@@ -53,20 +53,20 @@ public class FibaroFGRM222Converter extends ZWaveCommandClassConverter<FibaroFGR
 	}
 
 	@Override
-	SerialMessage executeRefresh(final ZWaveNode node, final FibaroFGRM222CommandClass commandClass, final int endpointId,
-			final Map<String, String> arguments) {
-		logger.debug("executeRefresh() -- nothing to do");
+	SerialMessage executeRefresh(final ZWaveNode node, final FibaroFGRM222CommandClass commandClass,
+			final int endpointId, final Map<String, String> arguments) {
+		logger.debug("NODE {}: executeRefresh() -- nothing to do", node.getNodeId());
 		return null;
 	}
 
 	@Override
 	void handleEvent(final ZWaveCommandClassValueEvent event, final Item item, final Map<String, String> arguments) {
-		logger.debug("handleEvent()");
+		logger.debug("NODE {}: handleEvent()", event.getNodeId());
 		ZWaveStateConverter<?, ?> converter = this.getStateConverter(item, event.getValue());
 
 		if (converter == null) {
-			logger.warn("No converter found for item = {}, node = {} endpoint = {}, ignoring event.", item.getName(),
-					event.getNodeId(), event.getEndpoint());
+			logger.warn("NODE {}: No converter found for item = {}, endpoint = {}, ignoring event.", event.getNodeId(),
+					item.getName(), event.getEndpoint());
 			return;
 		}
 
@@ -87,7 +87,7 @@ public class FibaroFGRM222Converter extends ZWaveCommandClassConverter<FibaroFGR
 	@Override
 	void receiveCommand(final Item item, final Command command, final ZWaveNode node,
 			final FibaroFGRM222CommandClass commandClass, final int endpointId, final Map<String, String> arguments) {
-		logger.debug("receiveCommand()");
+		logger.debug("NODE {}: receiveCommand()", node.getNodeId());
 		Command internalCommand = command;
 		SerialMessage serialMessage = null;
 		if (internalCommand instanceof StopMoveType && (StopMoveType) internalCommand == StopMoveType.STOP) {
@@ -96,8 +96,8 @@ public class FibaroFGRM222Converter extends ZWaveCommandClassConverter<FibaroFGR
 		} else {
 			ZWaveCommandConverter<?, ?> converter = this.getCommandConverter(command.getClass());
 			if (converter == null) {
-				logger.warn("No converter found for item = {}, node = {} endpoint = {}, ignoring command.",
-						item.getName(), node.getNodeId(), endpointId);
+				logger.warn("NODE {}: No converter found for item = {}, endpoint = {}, ignoring command.",
+						node.getNodeId(), item.getName(), endpointId);
 				return;
 			}
 			if (converter instanceof MultiLevelPercentCommandConverter) {
@@ -108,8 +108,8 @@ public class FibaroFGRM222Converter extends ZWaveCommandClassConverter<FibaroFGR
 			if (value == 0) {
 				value = 1;
 			}
-			logger.trace("Converted command '{}' to value {} for item = {}, node = {}, endpoint = {}.",
-					internalCommand.toString(), value, item.getName(), node.getNodeId(), endpointId);
+			logger.trace("NODE {}: Converted command '{}' to value {} for item = {}, endpoint = {}.", node.getNodeId(),
+					internalCommand.toString(), value, item.getName(), endpointId);
 
 			serialMessage = commandClass.setValueMessage(value, arguments.get("type"));
 		}
@@ -118,8 +118,8 @@ public class FibaroFGRM222Converter extends ZWaveCommandClassConverter<FibaroFGR
 		serialMessage = node.encapsulate(serialMessage, commandClass, endpointId);
 
 		if (serialMessage == null) {
-			logger.warn("Generating message failed for command class = {}, node = {}, endpoint = {}", commandClass
-					.getCommandClass().getLabel(), node.getNodeId(), endpointId);
+			logger.warn("NODE {}: Generating message failed for command class = {}, node = {}, endpoint = {}",
+					node.getNodeId(), commandClass.getCommandClass().getLabel(), endpointId);
 			return;
 		}
 		this.getController().sendData(serialMessage);
