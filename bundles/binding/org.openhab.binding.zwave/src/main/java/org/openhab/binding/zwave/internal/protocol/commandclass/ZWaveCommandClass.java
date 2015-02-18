@@ -209,7 +209,7 @@ public abstract class ZWaveCommandClass {
 		try {
 			CommandClass commandClass = CommandClass.getCommandClass(classId);
 			if (commandClass != null && commandClass.equals(CommandClass.MANUFACTURER_PROPRIETARY)){
-				commandClass = CommandClass.getCommandClass(classId + node.getManufacturer() + node.getDeviceType());
+				commandClass = CommandClass.getCommandClass(node.getManufacturer(), node.getDeviceType());
 			}
 			if (commandClass == null) {
 				logger.warn(String.format("NODE %d: Unknown command class 0x%02x", node.getNodeId(), classId));
@@ -443,9 +443,7 @@ public abstract class ZWaveCommandClass {
 		SENSOR_CONFIGURATION(0x9E,"SENSOR_CONFIGURATION",null),
 		MARK(0xEF,"MARK",null),
 		NON_INTEROPERABLE(0xF0,"NON_INTEROPERABLE",null),
-		// USE MANUFACTURER SPECIFIC (0x91 [MANUFACTURER_PROPRIETARY] + MANUFACTURER_ID + DEVICE_TYPE_ID)
-		// 0x91 + 0x010F + 0x0301 for FGRM_222
-		FIABRO_FGRM_222(0x4A1,"FIABRO_FGRM_222",FibaroFGRM222CommandClass.class);
+		FIABRO_FGRM_222(0x010F, 0x0301, "FIABRO_FGRM_222", FibaroFGRM222CommandClass.class);
 
 		/**
 		 * A mapping between the integer code and its corresponding
@@ -459,15 +457,32 @@ public abstract class ZWaveCommandClass {
 		 */
 		private static Map<String, CommandClass> labelToCommandClassMapping;
 
+		/**
+		 * Get unique command class code for manufacturer and device ID.
+		 *
+		 * To support manufacturer specific implementations of a manufacturer proprietary command class we use the
+		 * manufacturer and the device id to generate a unique key.
+		 *
+		 * @param manufacturer the manufacturer ID
+		 * @param deviceId the device ID
+		 * @return a unique command class key
+		 */
+		private static int getKeyFromManufacturerAndDeviceId(int manufacturer, int deviceId) {
+			return manufacturer << 16 | deviceId;
+		}
+
 		private int key;
 		private String label;
 		private Class<? extends ZWaveCommandClass> commandClassClass;
-
 
 		private CommandClass(int key, String label, Class<? extends ZWaveCommandClass> commandClassClass) {
 			this.key = key;
 			this.label = label;
 			this.commandClassClass = commandClassClass;
+		}
+
+		private CommandClass(int manufacturer, int deviceId, String label, Class<? extends ZWaveCommandClass> commandClassClass) {
+			this(getKeyFromManufacturerAndDeviceId(manufacturer, deviceId), label, commandClassClass);
 		}
 
 		private static void initMapping() {
@@ -492,7 +507,18 @@ public abstract class ZWaveCommandClass {
 			
 			return codeToCommandClassMapping.get(i);
 		}
-		
+
+		/**
+		 * Lookup function based on the manufacturer and device ID.
+		 *
+		 * @param manufacturer the manufacturer ID
+		 * @param deviceId the device ID
+		 * @return enumeration value of the command class or null if there is no command class.
+		 */
+		public static CommandClass getCommandClass(int manufacturer, int deviceId) {
+			return getCommandClass(getKeyFromManufacturerAndDeviceId(manufacturer, deviceId));
+		}
+
 		/**
 		 * Lookup function based on the command class label.
 		 * Returns null if there is no command class with that label.
