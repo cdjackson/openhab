@@ -123,7 +123,10 @@ public class FibaroFGRM222Converter extends ZWaveCommandClassConverter<FibaroFGR
 			return;
 		}
 		this.getController().sendData(serialMessage);
-		this.getEventPublisher().postUpdate(item.getName(), (State) command);
+
+		if (command instanceof State) {
+			this.getEventPublisher().postUpdate(item.getName(), (State)command);
+		}
 	}
 
 	@Override
