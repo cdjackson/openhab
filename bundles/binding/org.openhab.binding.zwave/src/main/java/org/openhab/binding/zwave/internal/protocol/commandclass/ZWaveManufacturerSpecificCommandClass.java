@@ -84,16 +84,6 @@ public class ZWaveManufacturerSpecificCommandClass extends ZWaveCommandClass {
 				logger.debug(String.format("NODE %d: Device Type = 0x%04x", this.getNode().getNodeId(), this.getNode().getDeviceType()));
 				logger.debug(String.format("NODE %d: Device ID = 0x%04x", this.getNode().getNodeId(), this.getNode().getDeviceId()));
 
-				// Check for Manufacturer Proprietary Command Class for this device.
-				final CommandClass commandClass = CommandClass.getCommandClass(0x91 + tempMan + tempDeviceType);
-				if (commandClass != null && getNode().getCommandClass(commandClass) == null){
-					logger.debug(String.format("NODE %d: Command class %s (0x%02x) not found, trying to add it.", getNode().getNodeId(), commandClass.getLabel(), commandClass.getKey()));
-					final ZWaveCommandClass zwaveCommandClass = ZWaveCommandClass.getInstance(commandClass.getKey(), getNode(), getController());
-					if (zwaveCommandClass != null) {
-						logger.debug(String.format("NODE %d: Adding command class %s (0x%02x)", getNode().getNodeId(), commandClass.getLabel(), commandClass.getKey()));
-						getNode().addCommandClass(zwaveCommandClass);
-					}
-				}
 				break;
 			default:
 				logger.warn(String.format("NODE %d: Unsupported Command 0x%02X for command class %s (0x%02X).",

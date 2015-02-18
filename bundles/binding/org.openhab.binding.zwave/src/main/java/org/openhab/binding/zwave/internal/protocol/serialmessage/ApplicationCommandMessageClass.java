@@ -69,14 +69,6 @@ public class ApplicationCommandMessageClass  extends ZWaveCommandProcessor {
 				logger.debug(String.format("NODE %d: Adding command class %s (0x%02x)", nodeId, commandClass.getLabel(), commandClass.getKey()));
 				node.addCommandClass(zwaveCommandClass);
 			}
-//			else if(commandClass.equals(CommandClass.MANUFACTURER_PROPRIETARY)) {
-//				// check for an instance of this MANUFACTURER_PROPERIETARY command.
-//				zwaveCommandClass = ZWaveManufacturerProprietaryCommandClass.getInstance(nodeId, node, zController);
-//				if (zwaveCommandClass != null) {
-//					logger.debug(String.format("NODE %d: Adding command class %s (0x%02x)", nodeId, commandClass.getLabel(), commandClass.getKey()));
-//					node.addCommandClass(zwaveCommandClass);
-//				}
-//			}
 		}
 
 		// We got an unsupported command class, return.
