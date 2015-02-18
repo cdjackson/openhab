@@ -37,7 +37,7 @@ public class FibaroFGRM222CommandClass extends ZWaveCommandClass {
 
 	@Override
 	public CommandClass getCommandClass() {
-		return CommandClass.FIABRO_FGRM_222;
+		return CommandClass.FIBARO_FGRM_222;
 	}
 
 	@Override
@@ -158,7 +158,7 @@ public class FibaroFGRM222CommandClass extends ZWaveCommandClass {
 		 * @param value the value for the event.
 		 */
 		private FibaroFGRM222ValueEvent(int nodeId, int endpoint, FibaroFGRM222ValueType sensorType, Object value) {
-			super(nodeId, endpoint, CommandClass.FIABRO_FGRM_222, value);
+			super(nodeId, endpoint, CommandClass.FIBARO_FGRM_222, value);
 			this.sensorType = sensorType;
 		}
 

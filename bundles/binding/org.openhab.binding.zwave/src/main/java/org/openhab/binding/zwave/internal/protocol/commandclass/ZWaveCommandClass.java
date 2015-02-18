@@ -443,7 +443,9 @@ public abstract class ZWaveCommandClass {
 		SENSOR_CONFIGURATION(0x9E,"SENSOR_CONFIGURATION",null),
 		MARK(0xEF,"MARK",null),
 		NON_INTEROPERABLE(0xF0,"NON_INTEROPERABLE",null),
-		FIABRO_FGRM_222(0x010F, 0x0301, "FIABRO_FGRM_222", FibaroFGRM222CommandClass.class);
+
+		// MANUFACTURER_PROPRIETARY class definitions are defined by the manufacturer and device id
+		FIBARO_FGRM_222(0x010F, 0x0301, "FIBARO_FGRM_222", FibaroFGRM222CommandClass.class);
 
 		/**
 		 * A mapping between the integer code and its corresponding
