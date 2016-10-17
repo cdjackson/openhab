@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Manufacturers>
     <Manufacturer>
         <Id>0175</Id>
@@ -2601,6 +2601,10 @@
             <Reference>
                 <Type>0400</Type>
                 <Id>0001</Id>
+            </Reference>
+            <Reference>
+                <Type>0400</Type>
+                <Id>0002</Id>
             </Reference>
             <Model>RPi Controller</Model>
             <Label lang="en">RPi ZWave Controller</Label>
